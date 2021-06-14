@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import count
@@ -102,6 +103,7 @@ def _publish_details(details: Iterable[EventDetails]):
         )
     except Exception as e:
         print(f"Could not publish events: {e}")
+        sys.exit(1)
 
 
 def main():
