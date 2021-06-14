@@ -107,6 +107,7 @@ def _publish_details(details: Iterable[EventDetails]):
 
 def main():
     events = _get_events()
+    print(f"Got a list of {len(events)}, proceeding to request details...")
     event_details = (_get_details(event) for event in events)
     valid_events = (details for details in event_details if _is_valid(details))
     _publish_details(valid_events)
