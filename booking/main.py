@@ -1,13 +1,12 @@
 import sys
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from itertools import count
 from typing import List, Dict, Iterable
 from urllib.parse import urlencode
 
 import pytz
 import requests
-from pytz import timezone
 
 from booking.configuration import configuration
 
@@ -47,7 +46,7 @@ def _get_events() -> List[Dict]:
 
 def _utc(input_time: datetime) -> datetime:
     naive_time = input_time.replace(tzinfo=None)
-    input_tz = timezone("Europe/Berlin")
+    input_tz = pytz.timezone("Europe/Berlin")
     local_time = input_tz.localize(naive_time)
     return local_time.astimezone(pytz.utc)
 
@@ -84,7 +83,7 @@ def _get_details(event: Dict) -> EventDetails:
 
 
 def _is_valid(details: EventDetails) -> bool:
-    if details.end_time > datetime.now():
+    if details.end_time > datetime.utcnow().replace(tzinfo=timezone.utc):
         return False
 
     return True
