@@ -119,6 +119,8 @@ def main():
     except Exception as e:
         print(f"Fuck me sideways: {e}")
         sys.exit(1)
+    else:
+        print("Success.")
 
 
 if __name__ == '__main__':
