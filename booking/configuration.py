@@ -17,21 +17,21 @@ def _determine_configuration() -> Configuration:
     if config == "woog-family":
         return Configuration(
             lake_id=UUID(os.getenv("LARGE_WOOG_UUID")),
-            variation="Badestelle Familienbad",
+            variation="Familienbad",
             query="Landgraf-Georg-Straße 121 * 64287 Darmstadt",
             api_key=api_key,
         )
     elif config == "woog-island":
         return Configuration(
             lake_id=UUID(os.getenv("LARGE_WOOG_UUID")),
-            variation="Badestelle Insel",
+            variation="Insel",
             query="Heinrich-Fuhr-Str. 20 * 64287 Darmstadt",
             api_key=api_key,
         )
     elif config == "muehlchen":
         return Configuration(
             lake_id=UUID(os.getenv("ARHEILGER_MUEHLCHEN_UUID")),
-            variation="Naturbadesee Arheilger Mühlchen",
+            variation="Arheilger Mühlchen",
             query="Brücherweg 1 * 64291 Darmstadt",
             api_key=api_key,
         )
