@@ -91,10 +91,13 @@ def _is_valid(details: EventDetails) -> bool:
 
 def _publish_details(details: Iterable[EventDetails]):
     base_url = f"https://api.woog.life/lake/{configuration.lake_id}/booking"
+    body = {
+        "events": list(details)
+    }
     try:
         requests.put(
             base_url,
-            json=list(details),
+            json=body,
             headers={"Authorization": f"Bearer {configuration.api_key}"}
         )
     except Exception as e:
