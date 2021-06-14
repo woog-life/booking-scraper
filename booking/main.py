@@ -62,7 +62,6 @@ def _utc(input_time: datetime) -> datetime:
     utc_time = local_time.astimezone(pytz.utc)
     return utc_time.replace(tzinfo=None)
 
-:
 
 def _get_details(event: Dict) -> EventDetails:
     event_id = event["pf_id"]
