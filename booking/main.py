@@ -87,6 +87,8 @@ def _get_details(event: Dict) -> EventDetails:
 
 
 def _is_valid(details: EventDetails) -> bool:
+    return True
+
     if details.end_time > datetime.utcnow().replace(tzinfo=timezone.utc):
         return False
 
