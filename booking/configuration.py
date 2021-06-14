@@ -24,7 +24,7 @@ def _determine_configuration() -> Configuration:
     elif config == "woog-island":
         return Configuration(
             lake_id=UUID(os.getenv("LARGE_WOOG_UUID")),
-            variation="Woog Badestelle Insel",
+            variation="Badestelle Insel",
             query="Heinrich-Fuhr-Str. 20 * 64287 Darmstadt",
             api_key=api_key,
         )
