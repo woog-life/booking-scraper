@@ -1,4 +1,3 @@
-import dataclasses
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -22,6 +21,15 @@ class EventDetails:
 
     def __repr__(self):
         return f"is_available={self.is_available} ({self.booking_link})"
+
+    def json(self) -> Dict:
+        return {
+            "booking_link": self.booking_link,
+            "is_available": self.is_available,
+            "begin_time": f"{self.begin_time.isoformat()}Z",
+            "end_time": f"{self.end_time.isoformat()}Z",
+            "sale_start": f"{self.sale_start.isoformat()}Z",
+        }
 
 
 def _get_events() -> List[Dict]:
@@ -100,7 +108,7 @@ def _publish_details(details: Iterable[EventDetails]):
     base_url = f"https://api.woog.life/lake/{configuration.lake_id}/booking"
     body = {
         "variation": configuration.variation,
-        "events": [dataclasses.asdict(event) for event in details],
+        "events": [event.json() for event in details],
     }
     response = requests.put(
         base_url,
