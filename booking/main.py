@@ -59,7 +59,8 @@ def _utc(input_time: datetime) -> datetime:
     naive_time = input_time.replace(tzinfo=None)
     input_tz = pytz.timezone("Europe/Berlin")
     local_time = input_tz.localize(naive_time)
-    return local_time.astimezone(pytz.utc)
+    utc_time = local_time.astimezone(pytz.utc)
+    return utc_time.replace(tzinfo=None)
 
 
 def _get_details(event: Dict) -> EventDetails:
