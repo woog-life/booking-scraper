@@ -1,6 +1,6 @@
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime
 from itertools import count
 from typing import List, Dict, Iterable
 from urllib.parse import urlencode
@@ -62,6 +62,7 @@ def _utc(input_time: datetime) -> datetime:
     utc_time = local_time.astimezone(pytz.utc)
     return utc_time.replace(tzinfo=None)
 
+:
 
 def _get_details(event: Dict) -> EventDetails:
     event_id = event["pf_id"]
@@ -96,15 +97,6 @@ def _get_details(event: Dict) -> EventDetails:
     )
 
 
-def _is_valid(details: EventDetails) -> bool:
-    return True
-
-    if details.end_time > datetime.utcnow().replace(tzinfo=timezone.utc):
-        return False
-
-    return True
-
-
 def _publish_details(details: Iterable[EventDetails]):
     base_url = f"https://api.woog.life/lake/{configuration.lake_id}/booking"
     body = {
@@ -124,8 +116,7 @@ def main():
         events = _get_events()
         print(f"Got a list of {len(events)} events, proceeding to request details...")
         event_details = (_get_details(event) for event in events)
-        valid_events = (details for details in event_details if _is_valid(details))
-        _publish_details(valid_events)
+        _publish_details(event_details)
     except Exception as e:
         print(f"Fuck me sideways: {e}")
         sys.exit(1)
