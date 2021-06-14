@@ -33,11 +33,13 @@ def _get_events() -> List[Dict]:
             ("page", page),
         ])
         url = base_url + arg
-        response = requests.get(url).json()
-        events = response["events"]
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        events = data["events"]
         result.extend(events)
 
-        meta = response["meta"]
+        meta = data["meta"]
         if page >= meta["total_pages"]:
             break
 
@@ -54,17 +56,19 @@ def _utc(input_time: datetime) -> datetime:
 def _get_details(event: Dict) -> EventDetails:
     event_id = event["pf_id"]
     base_url = f"https://api.ztix-technik.de/sale/events/{event_id}/?booking_office=129"
-    response = requests.get(base_url).json()
+    response = requests.get(base_url)
+    response.raise_for_status()
+    data = response.json()
 
-    begin_time = _utc(datetime.fromisoformat(response["begin_time"]))
-    end_time = _utc(datetime.fromisoformat(response["end_time"]))
+    begin_time = _utc(datetime.fromisoformat(data["begin_time"]))
+    end_time = _utc(datetime.fromisoformat(data["end_time"]))
 
-    sale_config = response["sale_configs"][0]
+    sale_config = data["sale_configs"][0]
     sale_start = _utc(datetime.fromisoformat(sale_config["start_date"]))
 
     is_available = False
 
-    products = response["products"]
+    products = data["products"]
     for product in products:
         if product["name"] == "Einzelkarte":
             is_available = product["is_available"]
@@ -95,24 +99,24 @@ def _publish_details(details: Iterable[EventDetails]):
         "variation": configuration.variation,
         "events": list(details),
     }
-    try:
-        response = requests.put(
-            base_url,
-            json=body,
-            headers={"Authorization": f"Bearer {configuration.api_key}"}
-        )
-        response.raise_for_status()
-    except Exception as e:
-        print(f"Could not publish events: {e}")
-        sys.exit(1)
+    response = requests.put(
+        base_url,
+        json=body,
+        headers={"Authorization": f"Bearer {configuration.api_key}"}
+    )
+    response.raise_for_status()
 
 
 def main():
-    events = _get_events()
-    print(f"Got a list of {len(events)} events, proceeding to request details...")
-    event_details = (_get_details(event) for event in events)
-    valid_events = (details for details in event_details if _is_valid(details))
-    _publish_details(valid_events)
+    try:
+        events = _get_events()
+        print(f"Got a list of {len(events)} events, proceeding to request details...")
+        event_details = (_get_details(event) for event in events)
+        valid_events = (details for details in event_details if _is_valid(details))
+        _publish_details(valid_events)
+    except Exception as e:
+        print(f"Fuck me sideways: {e}")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
