@@ -95,11 +95,12 @@ def _publish_details(details: Iterable[EventDetails]):
         "events": list(details)
     }
     try:
-        requests.put(
+        response = requests.put(
             base_url,
             json=body,
             headers={"Authorization": f"Bearer {configuration.api_key}"}
         )
+        response.raise_for_status()
     except Exception as e:
         print(f"Could not publish events: {e}")
         sys.exit(1)
@@ -107,7 +108,7 @@ def _publish_details(details: Iterable[EventDetails]):
 
 def main():
     events = _get_events()
-    print(f"Got a list of {len(events)}, proceeding to request details...")
+    print(f"Got a list of {len(events)} events, proceeding to request details...")
     event_details = (_get_details(event) for event in events)
     valid_events = (details for details in event_details if _is_valid(details))
     _publish_details(valid_events)
