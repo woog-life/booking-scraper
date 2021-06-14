@@ -1,3 +1,4 @@
+import dataclasses
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -99,7 +100,7 @@ def _publish_details(details: Iterable[EventDetails]):
     base_url = f"https://api.woog.life/lake/{configuration.lake_id}/booking"
     body = {
         "variation": configuration.variation,
-        "events": list(details),
+        "events": [dataclasses.asdict(event) for event in details],
     }
     response = requests.put(
         base_url,
