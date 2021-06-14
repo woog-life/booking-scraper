@@ -1,0 +1,26 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: booking-scraper-${LAKE_NAME}
+  namespace: wooglife
+spec:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          containers:
+            - name: scraper
+              image: ghcr.io/woog-life/booking-scraper:${GITHUB_SHA}
+              envFrom:
+                - secretRef:
+                    name: apikey
+                - configMapRef:
+                    name: lake-uuids
+              env:
+                - name: LAKE_NAME
+                  value: ${LAKE_NAME}
+          restartPolicy: Never
