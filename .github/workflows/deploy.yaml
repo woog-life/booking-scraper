@@ -32,14 +32,17 @@ jobs:
       - name: Create woog family config
         env:
           LAKE_NAME: woog-family
+          SCHEDULE: "*/15 * * * *"
         run: envsubst < .kubernetes/cronjob.yaml > deploy/cronjob_woog_family.yaml
       - name: Create woog island config
         env:
           LAKE_NAME: woog-island
+          SCHEDULE: "*/15 * * * *"
         run: envsubst < .kubernetes/cronjob.yaml > deploy/cronjob_woog_island.yaml
       - name: Create muehlchen config
         env:
           LAKE_NAME: muehlchen
+          SCHEDULE: "*/5 * * * *"
         run: envsubst < .kubernetes/cronjob.yaml > deploy/cronjob_muehlchen.yaml
       - uses: danielr1996/kubectl-action@1.0.0
         name: apply config

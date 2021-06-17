@@ -4,7 +4,7 @@ metadata:
   name: booking-scraper-${LAKE_NAME}
   namespace: wooglife
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "${SCHEDULE}"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
