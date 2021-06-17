@@ -1,9 +1,8 @@
-import dataclasses
 import sys
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import count
-from typing import List, Dict, Iterable, Union
+from typing import List, Dict, Iterable
 from urllib.parse import urlencode
 
 import pytz
@@ -23,14 +22,14 @@ class EventDetails:
     def __repr__(self):
         return f"is_available={self.is_available} ({self.booking_link})"
 
-    def json(self) -> Dict[str, Union[bool, str, int]]:
-        result: Dict[str, Union[bool, str, int]] = {}
-        for key, value in dataclasses.asdict(self).items():
-            if isinstance(value, datetime):
-                result[key] = f"{value.isoformat()}Z"
-            else:
-                result[key] = value
-        return result
+    def json(self) -> Dict:
+        return {
+            "booking_link": self.booking_link,
+            "is_available": self.is_available,
+            "begin_time": f"{self.begin_time.isoformat()}Z",
+            "end_time": f"{self.end_time.isoformat()}Z",
+            "sale_start": f"{self.sale_start.isoformat()}Z",
+        }
 
 
 def _get_events() -> List[Dict]:
