@@ -24,11 +24,11 @@ class EventDetails:
 
     def json(self) -> Dict:
         return {
-            "booking_link": self.booking_link,
-            "is_available": self.is_available,
-            "begin_time": f"{self.begin_time.isoformat()}Z",
-            "end_time": f"{self.end_time.isoformat()}Z",
-            "sale_start": f"{self.sale_start.isoformat()}Z",
+            "bookingLink": self.booking_link,
+            "isAvailable": self.is_available,
+            "beginTime": f"{self.begin_time.isoformat()}Z",
+            "endTime": f"{self.end_time.isoformat()}Z",
+            "saleStartTime": f"{self.sale_start.isoformat()}Z",
         }
 
 
