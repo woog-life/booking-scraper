@@ -81,7 +81,7 @@ def _get_details(event: Dict) -> EventDetails:
 
     products = data["products"]
     for product in products:
-        if product["name"] == "Einzelkarte":
+        if product["name"] in ["Einzelkarte", "Schwimmbadticket"]:
             is_available = product["is_available"]
             break
 
